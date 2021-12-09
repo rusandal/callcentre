@@ -6,10 +6,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main {
     final static int serviceTime = 1000;
-    final static int callsGeneratorCount = 60;
+    final static int callsGeneratorCount = 10;
     final static int generatorSleep = 1000;
     static int generatorCount = 3;
-    static ThreadLocal<Users> threadLocal = new ThreadLocal<>();
+    //static ThreadLocal<Users> threadLocal = new ThreadLocal<>();
     static ConcurrentLinkedQueue<Users> callList = new ConcurrentLinkedQueue<>();
 
 
@@ -35,9 +35,9 @@ public class Main {
         final ExecutorService threadPool = Executors.newFixedThreadPool(3);
         while (true) {
             threadPool.execute(() -> {
-                threadLocal.set(callList.poll());
-                if(threadLocal.get()!=null) {
-                    System.out.println(count.getAndIncrement() + " " + Thread.currentThread().getName() + " взял звонок пользователя " + threadLocal.get());
+                Users user;
+                if((user = callList.poll())!=null) {
+                    System.out.println(count.getAndIncrement() + " " + Thread.currentThread().getName() + " взял звонок пользователя " + user);
                     try {
                         Thread.sleep(serviceTime);
                     } catch (InterruptedException e) {
